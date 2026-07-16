@@ -11,6 +11,8 @@
         .elder-font { font-size: 1.45rem !important; line-height: 2rem !important; font-weight: 800 !important; }
         @keyframes pulse-danger { 0%, 100% { background-color: rgba(239, 68, 68, 0.2); } 50% { background-color: rgba(239, 68, 68, 0.5); } }
         .danger-pulse { animation: pulse-danger 2s infinite; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
 <body class="bg-slate-50 min-h-screen text-slate-800 flex flex-col">
@@ -94,13 +96,13 @@
             </div>
             <div class="relative w-full max-w-[380px] bg-slate-900 rounded-[50px] p-3.5 shadow-2xl border-4 border-slate-800">
                 <div class="absolute top-5 left-1/2 transform -translate-x-1/2 w-28 h-5 bg-black rounded-full z-20"></div>
-                <div class="relative overflow-hidden w-full aspect-[9/19.5] bg-cover bg-center rounded-[38px] flex flex-col justify-between p-4" style="background-image: url('https://images.unsplash.com/photo-1579546929518-9e396f3cc809?q=80&w=640&auto=format&fit=crop');">
+                <div class="relative overflow-hidden w-full aspect-[9/19.5] bg-cover bg-center rounded-[38px] flex flex-col p-4" style="background-image: url('https://images.unsplash.com/photo-1579546929518-9e396f3cc809?q=80&w=640&auto=format&fit=crop');">
                     <div class="absolute inset-0 bg-slate-900/40 z-0"></div>
-                    <div class="relative z-10 flex justify-between items-center text-xs text-white px-2 mt-2 font-semibold">
+                    <div class="relative z-10 shrink-0 flex justify-between items-center text-xs text-white px-2 mt-2 font-semibold">
                         <span id="phone-time">오후 02:45</span>
                         <div class="flex items-center gap-1"><span>📡</span><span>📶</span><span>🔋 88%</span></div>
                     </div>
-                    <div class="relative z-10 my-auto w-full transition-all duration-300 transform scale-100" id="alertPopupContainer">
+                    <div class="relative z-10 flex-1 min-h-0 overflow-y-auto no-scrollbar w-full py-2 transition-all duration-300 transform scale-100" id="alertPopupContainer">
                         <div id="disasterPopup" class="relative bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl p-5 border-t-8 border-amber-500 overflow-hidden">
                             <div id="popupBgDecor" class="pointer-events-none absolute inset-0 flex items-start justify-center overflow-hidden z-0"></div>
                             <div class="relative z-10">
@@ -115,7 +117,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="relative z-10 w-full flex flex-col items-center gap-2.5">
+                    <div class="relative z-10 shrink-0 w-full flex flex-col items-center gap-2.5">
                         <button onclick="readAloud()" class="bg-emerald-600/90 backdrop-blur hover:bg-emerald-700 text-white w-full py-3 px-4 rounded-xl flex items-center justify-center gap-2 text-xs font-bold shadow-lg transition active:scale-95">
                             <span class="text-sm">🔊</span><span id="speakBtnText">음성 맞춤 소리로 듣기</span>
                         </button>
@@ -430,6 +432,11 @@
                 buttonEl.innerText = btn.label;
                 actionContainer.appendChild(buttonEl);
             });
+
+            // 어르신 × 폭염 경보 조합은 화면 전환 시 음성 안내를 자동으로 재생합니다.
+            if (currentUserType === 'elder' && currentDisaster === 'heatwave') {
+                readAloud();
+            }
         }
 
         function setDisaster(disaster) {
