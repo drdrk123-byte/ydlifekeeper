@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>용답 기후 위기 재난 문자 시뮬레이터 (생태 확장판)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;600;700;800&display=swap');
+        body { font-family: 'Pretendard', sans-serif; }
+        .elder-font { font-size: 1.45rem !important; line-height: 2rem !important; font-weight: 800 !important; }
+        @keyframes pulse-danger { 0%, 100% { background-color: rgba(239, 68, 68, 0.2); } 50% { background-color: rgba(239, 68, 68, 0.5); } }
+        .danger-pulse { animation: pulse-danger 2s infinite; }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen text-slate-800 flex flex-col">
+
+    <header class="bg-emerald-600 text-white shadow-md py-5 px-6">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            <div>
+                <div class="flex items-center gap-2">
+                    <span class="bg-white text-emerald-700 font-bold text-xs px-2.5 py-1 rounded-full">용답동 기후·생태 복지</span>
+                    <span class="text-xs text-emerald-100">DONG·JI LINK 생태감수성 확장판</span>
+                </div>
+                <h1 class="text-2xl md:text-3xl font-extrabold mt-1 tracking-tight">용답 기후 위기 재난 문자 시뮬레이터</h1>
+                <p class="text-sm text-emerald-100 mt-1">사람(어르신·영유아)과 지역 생태계(자라·수달)가 기후재난을 각자 어떻게 겪는지 비교 체험합니다.</p>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-7xl w-full mx-auto p-4 md:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+        <section class="lg:col-span-5 flex flex-col gap-6">
+            <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+                <div class="flex items-center gap-2 mb-4">
+                    <span class="w-7 h-7 rounded-full bg-red-100 text-red-600 flex items-center justify-center font-bold text-sm">1</span>
+                    <h2 class="font-bold text-lg text-slate-900">기후 재난 상황 선택</h2>
+                </div>
+                <div class="grid grid-cols-3 gap-2" id="disasterSelector">
+                    <button onclick="setDisaster('heatwave')" id="btn-heatwave" class="flex flex-col items-center justify-center p-3.5 rounded-xl border-2 border-amber-500 bg-amber-50/50 text-amber-900 font-semibold transition hover:scale-[1.02]">
+                        <span class="text-3xl mb-1">☀️</span><span class="text-sm">폭염 경보</span>
+                    </button>
+                    <button onclick="setDisaster('flood')" id="btn-flood" class="flex flex-col items-center justify-center p-3.5 rounded-xl border-2 border-transparent bg-slate-100 text-slate-700 transition hover:bg-slate-200 hover:scale-[1.02]">
+                        <span class="text-3xl mb-1">🌧️</span><span class="text-sm">홍수 / 폭우</span>
+                    </button>
+                    <button onclick="setDisaster('typhoon')" id="btn-typhoon" class="flex flex-col items-center justify-center p-3.5 rounded-xl border-2 border-transparent bg-slate-100 text-slate-700 transition hover:bg-slate-200 hover:scale-[1.02]">
+                        <span class="text-3xl mb-1">🌀</span><span class="text-sm">태풍 경보</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="w-7 h-7 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-sm">2</span>
+                    <h2 class="font-bold text-lg text-slate-900">탭 선택</h2>
+                </div>
+                <p class="text-xs text-slate-500 mb-4">각 탭이 맡은 대상(사람/생물종)에 따라 재난문자가 어떻게 달라지는지 비교해 보세요.</p>
+                <div class="space-y-2.5">
+                    <button onclick="setUserType('elder')" id="user-elder" class="w-full flex items-center justify-between p-4 rounded-xl border-2 border-amber-500 bg-white shadow-sm scale-[1.01] transition">
+                        <div class="flex items-center gap-3">
+                            <span class="text-2xl bg-amber-100 p-1.5 rounded-lg">👵</span>
+                            <div class="text-left"><h3 class="font-bold text-sm text-slate-800">어르신</h3><p class="text-xs text-slate-500">초거대 글자, 쉼터 중심 안내</p></div>
+                        </div>
+                        <span class="text-amber-700 font-semibold text-xs border border-amber-200 px-2.5 py-1 rounded-full bg-amber-50">사람</span>
+                    </button>
+                    <button onclick="setUserType('infant')" id="user-infant" class="w-full flex items-center justify-between p-4 rounded-xl border-2 border-transparent bg-slate-100 text-slate-600 hover:bg-slate-200 transition">
+                        <div class="flex items-center gap-3">
+                            <span class="text-2xl bg-sky-100 p-1.5 rounded-lg">🍼</span>
+                            <div class="text-left"><h3 class="font-bold text-sm text-slate-800">영유아</h3><p class="text-xs text-slate-500">학생 제작 재난문자</p></div>
+                        </div>
+                        <span class="text-sky-700 font-semibold text-xs border border-sky-200 px-2.5 py-1 rounded-full bg-sky-50">사람</span>
+                    </button>
+                    <button onclick="setUserType('turtle')" id="user-turtle" class="w-full flex items-center justify-between p-4 rounded-xl border-2 border-transparent bg-slate-100 text-slate-600 hover:bg-slate-200 transition">
+                        <div class="flex items-center gap-3">
+                            <span class="text-2xl bg-lime-100 p-1.5 rounded-lg">🐢</span>
+                            <div class="text-left"><h3 class="font-bold text-sm text-slate-800">자라</h3><p class="text-xs text-slate-500">하천·습지 서식 파충류 생태 영향</p></div>
+                        </div>
+                        <span class="text-lime-700 font-semibold text-xs border border-lime-200 px-2.5 py-1 rounded-full bg-lime-50">생태계</span>
+                    </button>
+                    <button onclick="setUserType('otter')" id="user-otter" class="w-full flex items-center justify-between p-4 rounded-xl border-2 border-transparent bg-slate-100 text-slate-600 hover:bg-slate-200 transition">
+                        <div class="flex items-center gap-3">
+                            <span class="text-2xl bg-sky-100 p-1.5 rounded-lg">🦦</span>
+                            <div class="text-left"><h3 class="font-bold text-sm text-slate-800">수달</h3><p class="text-xs text-slate-500">하천 최상위 포식자, 수질 영향</p></div>
+                        </div>
+                        <span class="text-sky-700 font-semibold text-xs border border-sky-200 px-2.5 py-1 rounded-full bg-sky-50">생태계</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section class="lg:col-span-7 flex flex-col items-center justify-center bg-slate-100/50 rounded-2xl p-4 md:p-8 border border-dashed border-slate-300">
+            <div class="text-center mb-4">
+                <span id="currentStatusBadge" class="bg-amber-100 text-amber-800 text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wider">폭염 경보 × 어르신</span>
+            </div>
+            <div class="relative w-full max-w-[380px] bg-slate-900 rounded-[50px] p-3.5 shadow-2xl border-4 border-slate-800">
+                <div class="absolute top-5 left-1/2 transform -translate-x-1/2 w-28 h-5 bg-black rounded-full z-20"></div>
+                <div class="relative overflow-hidden w-full aspect-[9/19.5] bg-cover bg-center rounded-[38px] flex flex-col justify-between p-4" style="background-image: url('https://images.unsplash.com/photo-1579546929518-9e396f3cc809?q=80&w=640&auto=format&fit=crop');">
+                    <div class="absolute inset-0 bg-slate-900/40 z-0"></div>
+                    <div class="relative z-10 flex justify-between items-center text-xs text-white px-2 mt-2 font-semibold">
+                        <span id="phone-time">오후 02:45</span>
+                        <div class="flex items-center gap-1"><span>📡</span><span>📶</span><span>🔋 88%</span></div>
+                    </div>
+                    <div class="relative z-10 my-auto w-full transition-all duration-300 transform scale-100" id="alertPopupContainer">
+                        <div id="disasterPopup" class="relative bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl p-5 border-t-8 border-amber-500 overflow-hidden">
+                            <div id="popupBgDecor" class="pointer-events-none absolute inset-0 flex items-start justify-center overflow-hidden z-0"></div>
+                            <div class="relative z-10">
+                                <div class="flex justify-between items-center border-b pb-2.5 mb-3">
+                                    <div class="flex items-center gap-2"><span class="text-xl animate-bounce">🚨</span><h4 class="font-extrabold text-sm text-red-600 tracking-tight" id="alertTitle">긴급재난문자</h4></div>
+                                    <span class="text-[10px] text-slate-500 font-semibold" id="alertSender">용답동</span>
+                                </div>
+                                <div class="text-slate-800 space-y-3" id="popupBody"></div>
+                                <div id="popupCustomZone" class="mt-4 p-3 rounded-xl text-xs"></div>
+                                <div class="mt-4 grid grid-cols-2 gap-2" id="popupActions"></div>
+                                <div id="popupTeamNote" class="mt-3 text-[11px] text-slate-500 italic hidden"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="relative z-10 w-full flex flex-col items-center gap-2.5">
+                        <button onclick="readAloud()" class="bg-emerald-600/90 backdrop-blur hover:bg-emerald-700 text-white w-full py-3 px-4 rounded-xl flex items-center justify-center gap-2 text-xs font-bold shadow-lg transition active:scale-95">
+                            <span class="text-sm">🔊</span><span id="speakBtnText">음성 맞춤 소리로 듣기</span>
+                        </button>
+                        <div class="w-24 h-1 bg-white/60 rounded-full"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-6 text-center max-w-sm text-slate-500 text-xs space-y-1.5">
+                <p>💡 <b>재난 상황(1)</b>과 <b>탭(2)</b>을 눌러 비교해 보세요!</p>
+                <p>같은 재난이라도 <u>사람과 생물종에게 미치는 영향</u>이 어떻게 다른지 살펴보는 것이 이 시뮬레이터의 목표입니다.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-slate-800 text-slate-400 py-6 text-center text-xs mt-auto border-t border-slate-700">
+        <p>© 2026 성동구 용답동 기후회복 안전기획단 · DONG·JI LINK</p>
+        <p class="mt-1 text-slate-500">본 사이트는 기후정의와 생태감수성 교육을 위한 학급 프로젝트 프로토타입입니다.</p>
+    </footer>
+
+    <script>
+        let currentDisaster = 'heatwave';
+        let currentUserType = 'elder';
+
+        function updatePhoneTime() {
+            const now = new Date();
+            let hours = now.getHours();
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const ampm = hours >= 12 ? '오후' : '오전';
+            hours = hours % 12; hours = hours ? hours : 12;
+            document.getElementById('phone-time').innerText = `${ampm} ${String(hours).padStart(2, '0')}:${minutes}`;
+        }
+        setInterval(updatePhoneTime, 1000);
+        updatePhoneTime();
+
+        const disasterData = {
+            heatwave: {
+                title: "긴급재난문자 [폭염경보]",
+                borderColor: "border-amber-500",
+                elder: {
+                    sender: "[용답마을 안전대책본부] 폭염 경보 [용답 안전부]",
+                    message: "오늘 날씨가 더우니 13시에서 16시 사이에 야외활동을 자제해주세요. 🚫<br>바깥에서 절대 일하지 마시고 꼭~ 집이나 시원한 무더위 쉼터를 이용하세요!",
+                    badge: "폭염 경보 × 어르신",
+                    zoneStyle: "bg-amber-50 border border-amber-200 text-amber-950",
+                    customContent: `<div class="space-y-2 text-[13px]">
+                        <p class="font-bold">용답동 무더위쉼터: <b>용답동주민센터</b>(용답중앙23길 20), <b>용답동노인복지관</b>(천호대로78길 42), <b>용답도서관</b></p>
+                        <span class="font-black text-amber-900 block text-base">🥵🔥 더위 예방 4가지 행동</span>
+                        <p class="bg-white/80 p-1.5 rounded border border-amber-300 font-bold">1. 시원한 물 자주 마시기</p>
+                        <p class="bg-white/80 p-1.5 rounded border border-amber-300 font-bold">2. 통풍이 잘되는 옷 입기</p>
+                        <p class="bg-white/80 p-1.5 rounded border border-amber-300 font-bold">3. 이동할 때 양산이나 모자 쓰기</p>
+                        <p class="bg-white/80 p-1.5 rounded border border-amber-300 font-extrabold text-red-600">4. 창문을 닫거나 커튼 치기</p>
+                        <p class="font-bold text-red-700">어질어질하거나 머리가 아플 때는 119</p></div>`,
+                    actions: [
+                        { label: "📞 안부자녀 즉시통화", action: "alert('등록된 자녀에게 원클릭 안심 확인 전화를 발신합니다.')" },
+                        { label: "🏠 무더위 쉼터 안내", action: "alert('용답동주민센터, 용답동노인복지관, 용답도서관 위치를 안내합니다.')" }
+                    ],
+                    teamNote: "♥ 이 문자에 담긴 우리의 특별한 마음: 어르신들이 온열 질환에 걸리지 않고 안전하게 여름을 보낼 수 있게 하기 위한 마음"
+                },
+                infant: {
+                    sender: "[용답 안전부]",
+                    message: "<strong>친구들 안녕!</strong><br>오늘은 밖이 완전 만두 찜기야~ 물 자주 먹고, 집에서 부모님이랑 놀자~!",
+                    badge: "폭염 경보 × 영유아",
+                    zoneStyle: "bg-sky-50 border border-sky-200 text-sky-950",
+                    customContent: `<div class="space-y-1.5 text-xs"><span class="font-bold text-sky-900 block text-sm">이 규칙을 잘 지켜보자!</span>
+                        <p>1. 물 자주 마시기! 💧</p>
+                        <p>2. 참지말고 더우면 선풍기를 틀자~ 🌀</p>
+                        <p>3. 더운날 친구들이랑 너무 오래 놀지 않기 ☀️</p>
+                        <div id="infantMascotRow" class="flex gap-2 text-2xl justify-center mt-2"></div></div>`,
+                    actions: [
+                        { label: "🎲 오늘의 친구 다시 뽑기", action: "rerollInfantMascot()" }
+                    ],
+                    teamNote: "♥ 이 문자에 담긴 우리의 특별한 마음: 영유아를 위한 재난문자를 만들어서 영유아가 건강하게 여름을 보낼 수 있는 마음 🍨"
+                },
+                turtle: {
+                    sender: "[용답마을 안전대책본부] 폭염 경보 [용답 안전부]",
+                    message: "자라님! 물이 너무 뜨거워지고 있어요. 얕은 웅덩이는 완전히 말라버릴 수 있으니 그늘지고 깊은 물가로 이동해주세요!",
+                    badge: "폭염 경보 × 자라",
+                    zoneStyle: "bg-lime-50 border border-lime-200 text-lime-950",
+                    customContent: `<div class="space-y-1.5 text-xs"><span class="font-bold text-lime-900 block text-sm">🐢 주민 여러분께</span>
+                        <p>마른 웅덩이에 갇힌 자라를 보시면 다가가지 마시고 <b>성동구청 공원녹지과</b>에 전화해주세요!</p>
+                        <p class="font-bold">전화번호: 02-2286-5605, 02-2286-5674</p></div>`,
+                    actions: [
+                        { label: "📞 성동구청 공원녹지과", action: "alert('성동구청 공원녹지과(02-2286-5605, 02-2286-5674)로 연결됩니다.')" },
+                        { label: "📍 목격 지점 제보", action: "alert('자라 목격 지점을 지도에 제보하는 화면으로 이동합니다.')" }
+                    ],
+                    teamNote: "♥ 이 문자에 담긴 우리의 특별한 마음: 자라들이 다치지 않고 안전하게 있으면 하는 마음과 사람들이 자라를 더 생각하고 지켜줬으면 하는 마음입니다."
+                },
+                otter: {
+                    sender: "[용답마을 안전대책본부] 폭염 경보 [용답 안전부]",
+                    message: "수달여러분 지금 하천 수온이 많이 올라가고 있습니다. 그늘진 상류 쪽으로 이동해 몸을 식혀주시기 바랍니다.",
+                    badge: "폭염 경보 × 수달",
+                    zoneStyle: "bg-sky-50 border border-sky-200 text-sky-950",
+                    customContent: `<div class="space-y-1.5 text-xs"><span class="font-bold text-sky-900 block text-sm">🦦 주민 여러분께</span>
+                        <p>더위에 지치거나 물이 부족한 지역을 헤매는 수달을 발견하시면 즉시 신고해주시기 바랍니다.</p></div>`,
+                    actions: [
+                        { label: "🚨 목격 즉시 신고", action: "alert('수달 목격을 즉시 신고하는 화면으로 이동합니다.')" },
+                        { label: "🌊 하천 수질 정보", action: "alert('중랑천 실시간 수질·수온 정보 페이지로 이동합니다.')" }
+                    ],
+                    teamNote: "♥ 이 문자에 담긴 우리의 특별한 마음: 수달들이 떠밀려내려가지(다치지) 말라는 의도입니다."
+                }
+            },
+            flood: {
+                title: "🚨긴급대피문자 [집중호우]",
+                borderColor: "border-blue-500",
+                elder: {
+                    sender: "[용답마을 안전대책본부] 호우 경보 [용답 안전부]",
+                    message: "많은 비가 내리고 있으니 오늘은 외출을 자제해주시고, 배수로나 하천 근처에는 절대 가까이 가지 마세요.",
+                    badge: "홍수 경보 × 어르신",
+                    zoneStyle: "bg-blue-50 border border-blue-200 text-blue-950",
+                    customContent: `<div class="space-y-2 text-[13px]">
+                        <span class="font-black text-blue-900 block text-base">🌧️ 호우 대비 4가지 행동</span>
+                        <p class="bg-white p-2 rounded border border-blue-300 font-bold">1. 저지대·반지하 주택은 미리 대피하기</p>
+                        <p class="bg-white p-2 rounded border border-blue-300 font-bold">2. 물에 잠긴 도로는 절대 건너지 않기</p>
+                        <p class="bg-white p-2 rounded border border-blue-300 font-bold">3. 우산보다 우비를 입고 이동하기</p>
+                        <p class="bg-white p-2 rounded border border-blue-300 font-extrabold">4. 정전 대비 손전등 미리 준비하기</p>
+                        <p class="font-bold text-red-700">어지럽거나 위급할 때는 119</p></div>`,
+                    actions: [
+                        { label: "📞 안부자녀 즉시통화", action: "alert('등록된 자녀에게 원클릭 안심 확인 전화를 발신합니다.')" },
+                        { label: "🏫 대피소 안내", action: "alert('용답초등학교 실내체육관 등 인근 대피소 위치를 안내합니다.')" }
+                    ],
+                    teamNote: "♥ 이 문자에 담긴 우리의 특별한 마음: 어르신들이 안전하게 장마철을 보낼 수 있게 하기 위한 마음"
+                },
+                infant: {
+                    sender: "[용답 안전부]",
+                    message: "친구들 안녕! 하늘에서 물벼락이 뚝뚝 떨어지고 있어~ 우산 쓰고 장화 신고, 부모님이랑 손 꼭 잡고 다니자~!",
+                    badge: "홍수 경보 × 영유아",
+                    zoneStyle: "bg-sky-50 border border-sky-200 text-sky-950",
+                    customContent: `<div class="space-y-1.5 text-xs"><span class="font-bold text-sky-900 block text-sm">이 규칙을 잘 지켜보자!</span>
+                        <p>1. 물웅덩이는 첨벙첨벙 뛰어들지 않기! 💦</p>
+                        <p>2. 우산이랑 장화 꼭 챙기기! ☂️</p>
+                        <p>3. 부모님 손 꼭 잡고 다니기! 🤝</p>
+                        <div id="infantMascotRow" class="flex gap-2 text-2xl justify-center mt-2"></div></div>`,
+                    actions: [
+                        { label: "🎲 오늘의 친구 다시 뽑기", action: "rerollInfantMascot()" }
+                    ],
+                    teamNote: "♥ 이 문자에 담긴 우리의 특별한 마음: 영유아가 안전하게 장마철을 보낼 수 있는 마음"
+                },
+                turtle: {
+                    sender: "[용답마을 안전대책본부] 호우 경보 [용답 안전부]",
+                    message: "자라님! 하늘에서 물이 떨어지고 있습니다. 물웅덩이를 조심하시고 물이 더 위험하니 강 한가운데나 배수로는 피해주세요! 그리고 차도가 있는 도로로 올라가시면 안돼요! 거긴 차들이 다녀서 정말 위험합니다.",
+                    badge: "홍수 경보 × 자라",
+                    zoneStyle: "bg-lime-50 border border-lime-200 text-lime-950",
+                    customContent: `<div class="space-y-1.5 text-xs"><span class="font-bold text-lime-900 block text-sm">🐢 주민 여러분께</span>
+                        <p>자라를 마주쳤을 때 다가가지 마시고 <b>성동구청 공원녹지과</b>에 전화해주세요!</p>
+                        <p class="font-bold">전화번호: 02-2286-5605, 02-2286-5674</p></div>`,
+                    actions: [
+                        { label: "📞 성동구청 공원녹지과", action: "alert('성동구청 공원녹지과(02-2286-5605, 02-2286-5674)로 연결됩니다.')" },
+                        { label: "📍 목격 지점 제보", action: "alert('자라 목격 지점을 지도에 제보하는 화면으로 이동합니다.')" }
+                    ],
+                    teamNote: "♥ 이 문자에 담긴 우리의 특별한 마음: 자라들이 다치지 않고 안전하게 있으면 하는 마음과 사람들이 자라를 더 생각하고 지켜줬으면 하는 마음입니다."
+                },
+                otter: {
+                    sender: "[용답마을 안전대책본부] 호우+침수경보 [용답 안전부]",
+                    message: "수달여러분 지금밖에는 호우 주의보가 발령되었습니다. 지금 높은곳으로 올라가 대피해주시기 바랍니다. 지금 이시간부로 하천 저지대·지하철에는 침수될 수 있으니 그 장소는 삼가주시기 바랍니다.",
+                    badge: "홍수 경보 × 수달",
+                    zoneStyle: "bg-sky-50 border border-sky-200 text-sky-950",
+                    customContent: `<div class="space-y-1.5 text-xs"><span class="font-bold text-sky-900 block text-sm">🦦 주민 여러분께</span>
+                        <p>호우가 멈출 때까지 날씨 예보를 확인하시고 안전에 유의하시기 바랍니다.</p>
+                        <p class="font-bold">성수달과 수달을 발견하시면 즉시 신고해주시기 바랍니다.</p>
+                        <img src="images/flood-otter-shelter.png" alt="수달 대피소 옥상으로 올라가세요" class="mt-2 rounded-lg border border-sky-200 shadow-sm mx-auto max-h-48">
+                        <p class="text-center font-bold text-sky-800">🏢 대피소(옥상)로 올라가세요!</p></div>`,
+                    actions: [
+                        { label: "🚨 목격 즉시 신고", action: "alert('수달 목격을 즉시 신고하는 화면으로 이동합니다.')" },
+                        { label: "🌊 하천 대피 안내", action: "alert('하천 저지대·지하철 침수 위험 구간 안내로 이동합니다.')" }
+                    ],
+                    teamNote: "♥ 이 문자에 담긴 우리의 특별한 마음: 수달들이 떠밀려내려가지 말라는 의도입니다."
+                }
+            },
+            typhoon: {
+                title: "긴급재난문자 [태풍경보]",
+                borderColor: "border-slate-500",
+                elder: {
+                    sender: "[용답마을 안전대책본부] 태풍 경보 [용답 안전부]",
+                    message: "강한 바람과 비를 동반한 태풍이 다가오고 있습니다. 외출을 자제하시고 창문과 베란다를 미리 단속해주세요.",
+                    badge: "태풍 경보 × 어르신",
+                    zoneStyle: "bg-slate-100 border border-slate-300 text-slate-900",
+                    customContent: `<div class="space-y-2 text-[13px]">
+                        <span class="font-black text-slate-900 block text-base">🌀 태풍 대비 4가지 행동</span>
+                        <p class="bg-white p-2 rounded border border-slate-300 font-bold">1. 창문에 테이프나 신문지 붙여 고정하기</p>
+                        <p class="bg-white p-2 rounded border border-slate-300 font-bold">2. 베란다 화분·물건 안으로 들이기</p>
+                        <p class="bg-white p-2 rounded border border-slate-300 font-bold">3. 강풍 부는 동안 외출 자제하기</p>
+                        <p class="bg-white p-2 rounded border border-slate-300 font-extrabold">4. 정전 대비 손전등·배터리 준비하기</p>
+                        <p class="font-bold text-red-700">위급 상황엔 119</p></div>`,
+                    actions: [
+                        { label: "📞 안부자녀 즉시통화", action: "alert('등록된 자녀에게 원클릭 안심 확인 전화를 발신합니다.')" },
+                        { label: "🏫 대피소 안내", action: "alert('용답초등학교 실내체육관 등 인근 대피소 위치를 안내합니다.')" }
+                    ],
+                    teamNote: "♥ 이 문자에 담긴 우리의 특별한 마음: 어르신들이 안전하게 태풍을 보낼 수 있게 하기 위한 마음"
+                },
+                infant: {
+                    sender: "[용답 안전부]",
+                    message: "친구들 안녕! 오늘은 바람이 슝슝~ 창문을 꼭 닫고 집에서 안전하게 놀자~!",
+                    badge: "태풍 경보 × 영유아",
+                    zoneStyle: "bg-sky-50 border border-sky-200 text-sky-950",
+                    customContent: `<div class="space-y-1.5 text-xs"><span class="font-bold text-sky-900 block text-sm">이 규칙을 잘 지켜보자!</span>
+                        <p>1. 창문 꼭 닫기! 🪟</p>
+                        <p>2. 밖에 있는 물건 안으로 넣기! 📦</p>
+                        <p>3. 바람 부는 날은 밖에 나가지 않기! 🌀</p>
+                        <div id="infantMascotRow" class="flex gap-2 text-2xl justify-center mt-2"></div></div>`,
+                    actions: [
+                        { label: "🎲 오늘의 친구 다시 뽑기", action: "rerollInfantMascot()" }
+                    ],
+                    teamNote: "♥ 이 문자에 담긴 우리의 특별한 마음: 영유아가 안전하게 태풍을 보낼 수 있는 마음"
+                },
+                turtle: {
+                    sender: "[용답마을 안전대책본부] 태풍 경보 [용답 안전부]",
+                    message: "자라님! 강한 바람과 함께 물살이 거세지고 있어요. 진흙 속 깊이 몸을 숨기고 안전한 곳으로 이동해주세요!",
+                    badge: "태풍 경보 × 자라",
+                    zoneStyle: "bg-lime-50 border border-lime-200 text-lime-950",
+                    customContent: `<div class="space-y-1.5 text-xs"><span class="font-bold text-lime-900 block text-sm">🐢 주민 여러분께</span>
+                        <p>태풍으로 떠내려온 자라를 발견하시면 다가가지 마시고 <b>성동구청 공원녹지과</b>에 전화해주세요!</p>
+                        <p class="font-bold">전화번호: 02-2286-5605, 02-2286-5674</p></div>`,
+                    actions: [
+                        { label: "📞 성동구청 공원녹지과", action: "alert('성동구청 공원녹지과(02-2286-5605, 02-2286-5674)로 연결됩니다.')" },
+                        { label: "📍 목격 지점 제보", action: "alert('자라 목격 지점을 지도에 제보하는 화면으로 이동합니다.')" }
+                    ],
+                    teamNote: "♥ 이 문자에 담긴 우리의 특별한 마음: 자라들이 다치지 않고 안전하게 있으면 하는 마음과 사람들이 자라를 더 생각하고 지켜줬으면 하는 마음입니다."
+                },
+                otter: {
+                    sender: "[용답마을 안전대책본부] 태풍 경보 [용답 안전부]",
+                    message: "수달여러분 태풍으로 하천 물살이 매우 거세질 수 있습니다. 안전한 높은 곳으로 미리 대피해주시기 바랍니다.",
+                    badge: "태풍 경보 × 수달",
+                    zoneStyle: "bg-sky-50 border border-sky-200 text-sky-950",
+                    customContent: `<div class="space-y-1.5 text-xs"><span class="font-bold text-sky-900 block text-sm">🦦 주민 여러분께</span>
+                        <p>급류에 휩쓸리거나 다친 수달을 발견하시면 즉시 신고해주시기 바랍니다.</p></div>`,
+                    actions: [
+                        { label: "🚨 목격 즉시 신고", action: "alert('수달 목격을 즉시 신고하는 화면으로 이동합니다.')" },
+                        { label: "🌊 하천 대피 안내", action: "alert('하천 저지대·지하철 침수 위험 구간 안내로 이동합니다.')" }
+                    ],
+                    teamNote: "♥ 이 문자에 담긴 우리의 특별한 마음: 수달들이 떠밀려내려가지(다치지) 말라는 의도입니다."
+                }
+            }
+        };
+
+        // 영유아 팀이 실제로 그린 그림 (한글을 못 읽는 영유아를 위해 그림으로 전달)
+        const infantImagePools = {
+            heatwave: ['images/heatwave-infant-characters.png', 'images/heatwave-infant-summer-girl.png'],
+            flood: ['images/flood-infant-rainy-day.png'],
+            typhoon: ['images/typhoon-infant-window.png']
+        };
+        // 아직 그림이 없는 재난 상황은 이모지로 임시 대체
+        const infantEmojiPool = ['🖤', '🧊', '😠☀️', '💧', '🍉', '🌀', '👧'];
+
+        function rerollInfantMascot() {
+            const row = document.getElementById('infantMascotRow');
+            if (!row) return;
+            const imgPool = infantImagePools[currentDisaster];
+            if (imgPool && imgPool.length) {
+                const pick = imgPool[Math.floor(Math.random() * imgPool.length)];
+                row.innerHTML = `<img src="${pick}" alt="영유아 안내 그림" class="max-h-44 rounded-lg shadow-sm border border-sky-200 mx-auto">`;
+            } else {
+                const picks = [...infantEmojiPool].sort(() => Math.random() - 0.5).slice(0, 3);
+                row.innerHTML = picks.map(m => `<span>${m}</span>`).join('');
+            }
+        }
+
+        // 영유아 팀이 요청한 "재난문자 뒤 배경" (선데이 이미지, 실제 그림 사용)
+        function updateBgDecor(userType) {
+            const decor = document.getElementById('popupBgDecor');
+            if (userType === 'infant') {
+                decor.innerHTML = `<img src="images/infant-popup-background.png" class="absolute inset-0 w-full h-full object-cover" alt="">`;
+            } else {
+                decor.innerHTML = '';
+            }
+        }
+
+        function renderSimulator() {
+            const currentData = disasterData[currentDisaster][currentUserType];
+            const dataGroup = disasterData[currentDisaster];
+
+            document.getElementById('currentStatusBadge').innerText = currentData.badge;
+            updateBgDecor(currentUserType);
+
+            const alertPopup = document.getElementById('disasterPopup');
+            alertPopup.className = `bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl p-5 border-t-8 ${dataGroup.borderColor} overflow-hidden transition-all duration-300`;
+
+            const popupBody = document.getElementById('popupBody');
+            const alertTitle = document.getElementById('alertTitle');
+            const alertSender = document.getElementById('alertSender');
+            alertTitle.innerText = dataGroup.title;
+            alertSender.innerText = currentData.sender;
+
+            popupBody.className = currentUserType === 'elder'
+                ? "text-slate-900 space-y-3 font-extrabold elder-font text-left tracking-tight"
+                : "text-slate-800 space-y-3 font-semibold text-sm leading-relaxed text-left";
+            popupBody.innerHTML = `<p>${currentData.message}</p>`;
+
+            const customZone = document.getElementById('popupCustomZone');
+            customZone.className = `mt-4 p-4 rounded-xl text-left transition-all duration-300 ${currentData.zoneStyle}`;
+            customZone.innerHTML = currentData.customContent;
+            if (currentUserType === 'infant') rerollInfantMascot();
+
+            const teamNoteEl = document.getElementById('popupTeamNote');
+            if (currentData.teamNote) {
+                teamNoteEl.innerText = currentData.teamNote;
+                teamNoteEl.classList.remove('hidden');
+            } else {
+                teamNoteEl.classList.add('hidden');
+            }
+
+            const actionContainer = document.getElementById('popupActions');
+            actionContainer.innerHTML = '';
+            const styleMap = {
+                elder: "bg-orange-600 text-white rounded-xl py-3.5 px-3 hover:bg-orange-700 transition font-black text-sm shadow-md border border-orange-500 text-center active:scale-95",
+                infant: "bg-sky-500 text-white rounded-xl py-3 px-3 hover:bg-sky-600 transition font-bold text-xs shadow-sm text-center active:scale-95",
+                turtle: "bg-lime-600 text-white rounded-xl py-3 px-3 hover:bg-lime-700 transition font-bold text-xs shadow-sm text-center active:scale-95",
+                otter: "bg-sky-600 text-white rounded-xl py-3 px-3 hover:bg-sky-700 transition font-bold text-xs shadow-sm text-center active:scale-95"
+            };
+            currentData.actions.forEach(btn => {
+                const buttonEl = document.createElement('button');
+                buttonEl.className = styleMap[currentUserType];
+                buttonEl.setAttribute('onclick', btn.action);
+                buttonEl.innerText = btn.label;
+                actionContainer.appendChild(buttonEl);
+            });
+        }
+
+        function setDisaster(disaster) {
+            currentDisaster = disaster;
+            ['heatwave', 'flood', 'typhoon'].forEach(id => {
+                document.getElementById(`btn-${id}`).className = "flex flex-col items-center justify-center p-3.5 rounded-xl border-2 border-transparent bg-slate-100 text-slate-700 transition hover:bg-slate-200 hover:scale-[1.02]";
+            });
+            let highlight = "border-amber-500 bg-amber-50/50 text-amber-900";
+            if (disaster === 'flood') highlight = "border-blue-500 bg-blue-50/50 text-blue-900";
+            if (disaster === 'typhoon') highlight = "border-slate-500 bg-slate-100 text-slate-900";
+            document.getElementById(`btn-${disaster}`).className = `flex flex-col items-center justify-center p-3.5 rounded-xl border-2 font-semibold transition hover:scale-[1.02] ${highlight}`;
+            renderSimulator();
+        }
+
+        function setUserType(userType) {
+            currentUserType = userType;
+            ['elder', 'infant', 'turtle', 'otter'].forEach(type => {
+                document.getElementById(`user-${type}`).className = "w-full flex items-center justify-between p-4 rounded-xl border-2 border-transparent bg-slate-100 text-slate-600 hover:bg-slate-200 transition";
+            });
+            const borderMap = {
+                elder: "border-amber-500 bg-white shadow-sm scale-[1.01]",
+                infant: "border-sky-500 bg-white shadow-sm scale-[1.01]",
+                turtle: "border-lime-500 bg-white shadow-sm scale-[1.01]",
+                otter: "border-sky-500 bg-white shadow-sm scale-[1.01]"
+            };
+            document.getElementById(`user-${userType}`).className = `w-full flex items-center justify-between p-4 rounded-xl border-2 bg-white hover:bg-slate-50 transition ${borderMap[userType]}`;
+
+            const popupContainer = document.getElementById('alertPopupContainer');
+            popupContainer.classList.add('scale-95', 'opacity-50');
+            setTimeout(() => { renderSimulator(); popupContainer.classList.remove('scale-95', 'opacity-50'); }, 150);
+        }
+
+        function readAloud() {
+            if (!('speechSynthesis' in window)) { alert("이 브라우저는 TTS를 지원하지 않습니다."); return; }
+            window.speechSynthesis.cancel();
+            const currentData = disasterData[currentDisaster][currentUserType];
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = `${disasterData[currentDisaster].title}. ${currentData.sender}에서 알립니다. ${currentData.message}`;
+            const utterance = new SpeechSynthesisUtterance(tempDiv.innerText);
+            utterance.lang = 'ko-KR';
+            utterance.rate = currentUserType === 'elder' ? 0.72 : 0.92;
+            utterance.pitch = currentUserType === 'elder' ? 0.95 : (currentUserType === 'infant' ? 1.15 : 1.0);
+            const speakBtnText = document.getElementById('speakBtnText');
+            utterance.onstart = () => speakBtnText.innerText = "🔊 안내 중...";
+            utterance.onend = utterance.onerror = () => speakBtnText.innerText = "🔊 음성 맞춤 소리로 듣기";
+            window.speechSynthesis.speak(utterance);
+        }
+
+        window.onload = renderSimulator;
+    </script>
+</body>
+</html>
